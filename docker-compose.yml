@@ -1,20 +1,40 @@
 version: '3.7'
 
 services:
-    db: # docker exec -it db sqlcmd -S localhost -U SA -P "Password123!"
+    db: # docker exec -it db sqlcmd -S localhost -U SA -P Password123!
         container_name: db
-        image: mcr.microsoft.com/mssql/server:2017-latest
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: mssqlserver
         ports:
             - "1433:1433"
         restart: always
-        environment: 
+        environment:
             ACCEPT_EULA: Y
             SA_PASSWORD: Password123!
-            PATH: /opt/mssql-tools/bin:${PATH}
-        networks: 
+        networks:
             - rmsbd
-        volumes: 
-            - ./sql:/docker-entrypoint-initdb.d
+        volumes:
+            - ./sql_scripts:/sql_scripts
+        command:
+            - /bin/bash
+            - -c
+            - |
+                sqlservr &
+                echo "Waiting for db to be available"
+                sqlcmd -l 30 -S localhost -h-1 -V1 -U sa -P $$SA_PASSWORD -Q "SET NOCOUNT ON SELECT \"db is ready for connection\""
+                is_up=$$?
+                while [ $$is_up -ne 0 ] ; do
+                    echo -e $$(date)
+                    sqlcmd -l 30 -S localhost -h-1 -V1 -U sa -P $$SA_PASSWORD -Q "SET NOCOUNT ON SELECT \"db is ready for connection\""
+                    is_up=$$?
+                    sleep 5
+                done
+                for foo in /sql_scripts/*.sql
+                    do sqlcmd -U sa -P $$SA_PASSWORD -l 30 -e -i $$foo
+                done
+                sleep infinity
 
 networks:
     rmsbd:
