@@ -46,7 +46,7 @@ insert into hotel..room (room_id, capacity, price, has_bathtub, has_safe) values
 select * from hotel..room;
 go
 
-insert into hotel..client (first_name, last_name, city, address, phone, birth_date, type) values
+insert into hotel..client (first_name, last_name, city_id, [address], phone, birth_date, type) values
     ('Izabela', 'Kołodziej', '3', 'Grzegorzowska 33', '523584547', '1995/7/10', '3'),
     ('Krzysztof', 'Andrzejewski', '5', 'Rafałowska 56', '584894914', '1948/11/7', '3'),
     ('Czesław', 'Duda', '7', 'Adamowska 81', '528246425', '1941/1/19', '2'),
@@ -107,7 +107,7 @@ insert into hotel..occupation (name, minimum_wage) values
 select * from hotel..occupation;
 go
 
-insert into hotel..employee (first_name, last_name, city, address, phone, birth_date, employment_date, occupation_id, wage) values
+insert into hotel..employee (first_name, last_name, city_id, [address], phone, birth_date, employment_date, occupation_id, wage) values
     ('Sebastian', 'Wójcik', '7', 'Mieczysławowska 33', '522625836', '1952/7/16', '2012/7/14', '4', '7000'),
     ('Agnieszka', 'Ziółkowski', '7', 'Jacekowska 96', '547855741', '1960/6/2', '2015/6/20', '9', '4000'),
     ('Wanda', 'Szymański', '7', 'Wiesławowska 44', '528663782', '1943/6/1', '2013/7/14', '6', '7000'),
