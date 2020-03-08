@@ -100,7 +100,7 @@ insert into hotel..occupation (name, minimum_wage) values
     ('Pokojowka', '3000'),
     ('Sprzataczka', '3500'),
     ('Operator windy', '4500'),
-    ('Recepjonista', '4000'),
+    ('Recepcjonista', '4000'),
     ('Dyrektor hotelu', '18000'),
     ('Kierownik lokalu gastronomicznego', '11000'),
     ('Specjalista ds. rezerwacji', '13000');
