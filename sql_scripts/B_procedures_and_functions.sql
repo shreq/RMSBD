@@ -4,10 +4,10 @@ GO
 
 -- Procedure #1 - moves archive bookings to hotel..past_booking
 	IF EXISTS (SELECT 1 FROM sysobjects WHERE NAME='booking_archive')
-		DROP PROCEDURE booking_archive
+		DROP PROCEDURE archive_bookings
 	GO
 
-	CREATE PROCEDURE booking_archive AS
+	CREATE PROCEDURE archive_bookings AS
 		BEGIN
 			INSERT INTO past_booking
 			SELECT booking_id, client_id, room_id, man_count, [start_date], DATEADD(DAY, day_count, [start_date])
@@ -19,7 +19,7 @@ GO
 	GO
 
 
--- Procedure #2 - removes employee with specific id from hotel..empoyee
+-- Procedure #2 - removes employee with specific id from hotel..employee
 	IF EXISTS (SELECT 1 FROM sysobjects WHERE NAME='remove_employee')
 		DROP PROCEDURE remove_employee
 	GO
@@ -35,10 +35,10 @@ GO
 
 -- Procedure #3 - corrects bookings that were incorrectly registered (too many people) and prints out which one were incorrect
 	IF EXISTS (SELECT 1 FROM sysobjects WHERE NAME='man_booking_correctness')
-		DROP PROCEDURE man_booking_correctness
+		DROP PROCEDURE correct_booking_capacity
 	GO
 
-	CREATE PROCEDURE man_booking_correctness AS
+	CREATE PROCEDURE correct_booking_capacity AS
 		BEGIN
 			DECLARE pointer CURSOR FOR SELECT booking_id, room_id, man_count FROM booking
 
@@ -68,10 +68,10 @@ GO
 
 -- Procedure #4 - most booked room on specified floor
 	IF EXISTS (SELECT 1 FROM sysobjects WHERE NAME = 'most_booked_room')
-		DROP PROCEDURE most_booked_room
+		DROP PROCEDURE get_most_booked_room
 	GO
 
-	CREATE PROCEDURE most_booked_room(@floor int) AS
+	CREATE PROCEDURE get_most_booked_room(@floor int) AS
 		BEGIN
 			DECLARE @room INT
 			SELECT @room = room_id FROM past_booking
@@ -91,10 +91,10 @@ GO
 
 -- Procedure #5 - count charge for employees for specified month and year
 	IF EXISTS (SELECT 1 FROM sysobjects WHERE NAME='charges')
-		DROP PROCEDURE charges
+		DROP PROCEDURE get_total_wage_for_all_employees
 	GO
 
-	CREATE PROCEDURE charges (@year varchar(4), @month varchar(20)) AS
+	CREATE PROCEDURE get_total_wage_for_all_employees (@year varchar(4), @month varchar(20)) AS
 		BEGIN
 			DECLARE @income INT = 0
 			DECLARE @wage INT, @employment_date DATE, @leave_date DATE
@@ -133,10 +133,10 @@ GO
 
 -- Function #1 - counts cost of specified booking
 	IF EXISTS (SELECT 1 FROM sysobjects WHERE NAME='booking_cost')
-		DROP FUNCTION booking_cost
+		DROP FUNCTION get_booking_cost
 	GO
 
-	CREATE FUNCTION booking_cost(@id int)
+	CREATE FUNCTION get_booking_cost(@id int)
 	RETURNS int AS
 		BEGIN
 			DECLARE @sum int
@@ -172,10 +172,10 @@ GO
 
 -- Function #2 - check if specified room is available within specified time
 	if exists (select 1 from sysobjects where name = 'room_availability')
-		drop function room_availability
+		drop function is_room_available
 	go
 
-	create function room_availability(@room int, @start date, @days int)
+	create function is_room_available(@room int, @start date, @days int)
 	returns bit as
 		begin
 			if exists (
