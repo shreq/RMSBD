@@ -34,13 +34,13 @@ CREATE TABLE hotel.dbo.client (
 	first_name		VARCHAR(25) NOT NULL,
 	last_name		VARCHAR(25) NOT NULL,
 	birth_date		DATE NOT NULL,
-	city			INT NOT NULL,
+	city_id			INT NOT NULL,
 	address			VARCHAR(45) NOT NULL,
 	phone			VARCHAR(15) NOT NULL,
 	type			INT NOT NULL,
 
 	CONSTRAINT client_pk PRIMARY KEY (client_id),
-	CONSTRAINT client_city_fk FOREIGN KEY (city) REFERENCES hotel.dbo.city (city_id),
+	CONSTRAINT client_city_fk FOREIGN KEY (city_id) REFERENCES hotel.dbo.city (city_id),
 
 	CONSTRAINT client_type_check CHECK (type <= 3 AND type >= 1)
 );
@@ -59,7 +59,7 @@ CREATE TABLE hotel.dbo.employee (
 	employee_id			INT IDENTITY(1,1),
 	first_name			VARCHAR(25) NOT NULL,
 	last_name			VARCHAR(25) NOT NULL,
-	city				INT NOT NULL,
+	city_id				INT NOT NULL,
 	address				VARCHAR(45) NOT NULL,
 	phone				VARCHAR(15) NOT NULL,
 	birth_date			DATE NOT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE hotel.dbo.employee (
 	wage				MONEY NOT NULL,
 
 	CONSTRAINT employee_pk PRIMARY KEY (employee_id),
-	CONSTRAINT employee_city_fk FOREIGN KEY (city) REFERENCES hotel.dbo.city (city_id),
+	CONSTRAINT employee_city_fk FOREIGN KEY (city_id) REFERENCES hotel.dbo.city (city_id),
 	CONSTRAINT employee_occupation_fk FOREIGN KEY (occupation_id) REFERENCES hotel.dbo.occupation (occupation_id),
 
 	CONSTRAINT employee_date_check CHECK (birth_date < employment_date),
@@ -81,7 +81,7 @@ CREATE TABLE hotel.dbo.exemployee (
 	employee_id			INT  NOT NULL,
 	first_name			VARCHAR(25) NOT NULL,
 	last_name			VARCHAR(25) NOT NULL,
-	city				INT NOT NULL,
+	city_id				INT NOT NULL,
 	address				VARCHAR(45) NOT NULL,
 	phone				VARCHAR(15) NOT NULL,
 	birth_date			DATE NOT NULL,
@@ -91,7 +91,7 @@ CREATE TABLE hotel.dbo.exemployee (
 	wage				MONEY NOT NULL,
 
 	CONSTRAINT exemployee_pk PRIMARY KEY (employee_id),
-	CONSTRAINT exemployee_city_fk FOREIGN KEY (city) REFERENCES hotel.dbo.city (city_id),
+	CONSTRAINT exemployee_city_fk FOREIGN KEY (city_id) REFERENCES hotel.dbo.city (city_id),
 	CONSTRAINT exemployee_occupation_fk FOREIGN KEY (occupation_id) REFERENCES hotel.dbo.occupation (occupation_id)
 );
 GO
