@@ -69,27 +69,33 @@ GO
 	go
 
 
--- Trigger #3 -  podczas rezerwacji proponuje lepsze pokoje które lepiej spełniają wymagania (posiadają przynajmniej te same cechy,
+-- Trigger #3 - check for better rooms while booking
 	IF EXISTS (SELECT 1 FROM sysobjects WHERE NAME='cheaper_rooms')
 		DROP TRIGGER cheaper_rooms
 	GO
 
 	CREATE TRIGGER cheaper_rooms
 	ON booking
-	AFTER INSERT
-	AS
+	AFTER INSERT AS
 		BEGIN
-			DECLARE @r_id INT, @capacity INT, @price INT, @h_b BIT, @h_s BIT, @b_id INT = (SELECT i.booking_id FROM inserted AS i)
+			DECLARE @r_id INT, @capacity INT, @price INT, @h_b BIT, @h_s BIT, @b_id INT
+			-- CREATE TABLE #b_id (id INT)
+			-- INSERT into #b_id select booking_id FROM inserted
+			select booking_id, room_id into #b_id from inserted
 
-			PRINT ' Booking ' + CONVERT(VARCHAR(5), @b_id)
+			while exists (select * from #b_id)
+			begin
+				select top 1 @b_id = booking_id from #b_id
 
-			DECLARE pointer CURSOR FOR SELECT room_id, capacity, price, has_bathtub, has_safe FROM room
-			OPEN pointer
-			FETCH NEXT FROM pointer INTO @r_id, @capacity, @price, @h_b, @h_s
+				PRINT ' Booking ' + CONVERT(VARCHAR(5), @b_id)
 
-			WHILE @@FETCH_STATUS = 0
+				DECLARE pointer CURSOR FOR SELECT room_id, capacity, price, has_bathtub, has_safe FROM room
+				OPEN pointer
+				FETCH NEXT FROM pointer INTO @r_id, @capacity, @price, @h_b, @h_s
+
+				WHILE @@FETCH_STATUS = 0
 				BEGIN
-					DECLARE @base_price INT = (SELECT r.price FROM room AS r, inserted AS i WHERE i.room_id = r.room_id)
+					DECLARE @base_price INT = (SELECT r.price FROM room AS r, #b_id AS bid WHERE bid.room_id = r.room_id and bid.booking_id = @b_id)
 
 					IF ((@price <= @base_price) AND (@r_id NOT IN (
 							SELECT b.room_id FROM booking AS b, inserted AS i WHERE ((i.[start_date] > DATEADD(DAY, b.day_count, b.[start_date]))
@@ -100,7 +106,7 @@ GO
 							IF (@price < @base_price)
 								SET @description = 'room is cheaper by ' + CONVERT(VARCHAR(5), (@base_price - @price))
 
-							IF (@capacity < (SELECT p.capacity FROM room AS p, inserted AS i WHERE i.room_id = p.room_id))
+							IF (@capacity < (SELECT r.capacity FROM room AS r, #b_id AS bid WHERE bid.room_id = r.room_id and bid.booking_id = @b_id))
 								BEGIN
 									IF  @description <> ''
 										SET @description = @description + ', fits more people'
@@ -108,7 +114,7 @@ GO
 										SET @description = @description + 'fits more people'
 								END
 
-							IF (@h_s < (SELECT p.has_safe FROM room AS p, inserted AS i WHERE i.room_id = p.room_id))
+							IF (@h_s < (SELECT r.has_safe FROM room AS r, #b_id AS bid WHERE bid.room_id = r.room_id and bid.booking_id = @b_id))
 								BEGIN
 									IF  @description <> ''
 										SET @description = @description + ', has safe'
@@ -116,7 +122,7 @@ GO
 										SET @description = @description + 'has safe'
 								END
 
-							IF (@h_b < (SELECT p.has_bathtub FROM room AS p, inserted AS i WHERE i.room_id = p.room_id))
+							IF (@h_b < (SELECT r.has_bathtub FROM room AS r, #b_id AS bid WHERE bid.room_id = r.room_id and bid.booking_id = @b_id))
 								BEGIN
 									IF  @description <> ''
 										SET @description = @description + ', has bathtub'
@@ -131,8 +137,11 @@ GO
 					FETCH NEXT FROM pointer INTO @r_id, @capacity, @price, @h_b, @h_s
 				END
 
-			CLOSE pointer
-			DEALLOCATE pointer
+				delete #b_id where booking_id = @b_id
+
+				CLOSE pointer
+				DEALLOCATE pointer
+			end
 		END
 	GO
 

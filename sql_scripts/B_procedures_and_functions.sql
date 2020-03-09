@@ -2,7 +2,7 @@ USE hotel
 GO
 
 
--- Procedure #1 - moves archive bookings to hotel..past_booking
+-- Procedure #1: archive_bookings - moves archive bookings to hotel..past_booking
 	IF EXISTS (SELECT 1 FROM sysobjects WHERE NAME='booking_archive')
 		DROP PROCEDURE archive_bookings
 	GO
@@ -19,7 +19,7 @@ GO
 	GO
 
 
--- Procedure #2 - removes employee with specific id from hotel..employee
+-- Procedure #2: remove_employee - removes employee with specific id from hotel..employee
 	IF EXISTS (SELECT 1 FROM sysobjects WHERE NAME='remove_employee')
 		DROP PROCEDURE remove_employee
 	GO
@@ -33,7 +33,7 @@ GO
 	GO
 
 
--- Procedure #3 - corrects bookings that were incorrectly registered (too many people) and prints out which one were incorrect
+-- Procedure #3: correct_booking_capacity - corrects bookings that were incorrectly registered (too many people) and prints out which one were incorrect
 	IF EXISTS (SELECT 1 FROM sysobjects WHERE NAME='man_booking_correctness')
 		DROP PROCEDURE correct_booking_capacity
 	GO
@@ -66,7 +66,7 @@ GO
 	GO
 
 
--- Procedure #4 - most booked room on specified floor
+-- Procedure #4: get_most_booked_room - most booked room on specified floor
 	IF EXISTS (SELECT 1 FROM sysobjects WHERE NAME = 'most_booked_room')
 		DROP PROCEDURE get_most_booked_room
 	GO
@@ -89,7 +89,7 @@ GO
 	GO
 
 
--- Procedure #5 - count charge for employees for specified month and year
+-- Procedure #5: get_total_wage_for_all_employees - count charge for employees for specified month and year
 	IF EXISTS (SELECT 1 FROM sysobjects WHERE NAME='charges')
 		DROP PROCEDURE get_total_wage_for_all_employees
 	GO
@@ -131,7 +131,7 @@ GO
 	GO
 
 
--- Function #1 - counts cost of specified booking
+-- Function #1: get_booking_cost - counts cost of specified booking
 	IF EXISTS (SELECT 1 FROM sysobjects WHERE NAME='booking_cost')
 		DROP FUNCTION get_booking_cost
 	GO
@@ -170,7 +170,7 @@ GO
 	GO
 
 
--- Function #2 - check if specified room is available within specified time
+-- Function #2: is_room_available - check if specified room is available within specified time
 	if exists (select 1 from sysobjects where name = 'room_availability')
 		drop function is_room_available
 	go
