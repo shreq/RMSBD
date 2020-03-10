@@ -43,28 +43,28 @@ GO
 	on booking
 	instead of insert as
 		begin
-			declare auth cursor for
-			select client_id, room_id, man_count, [start_date], day_count from inserted
+			create table #entries (
+				client_id	INT NOT NULL,
+				room_id		INT NOT NULL,
+				man_count	INT NOT NULL,
+				start_date	DATE NOT NULL,
+				day_count	INT NOT NULL
+			)
+			declare auth cursor for select client_id, room_id, man_count, [start_date], day_count from inserted
 			declare @client int, @room int, @man_count int, @start_date date, @day_count int
 			open auth
 			fetch next from auth into @client, @room, @man_count, @start_date, @day_count
 			while @@FETCH_STATUS = 0
 				begin
-					begin transaction
 					if (dbo.is_room_available(@room, @start_date, @day_count) = 0)
-						begin
-							print 'Error: Room ' + convert(varchar(3), @room)+ ' is not available in requested date range (' + convert(varchar(20), @start_date) + ' - ' + convert(varchar(20), dateadd(day, @day_count, @start_date)) + ')'
-							rollback
-						end
+						print 'Error: Room ' + convert(varchar(3), @room)+ ' is not available in requested date range (' + convert(varchar(20), @start_date) + ' - ' + convert(varchar(20), dateadd(day, @day_count, @start_date)) + ')'
 					else
-						begin
-							insert into booking values (@client, @room, @man_count, @start_date, @day_count)
-							commit
-						end
+						insert into #entries values (@client, @room, @man_count, @start_date, @day_count)
 					fetch next from auth into @client, @room, @man_count, @start_date, @day_count
 				end
 			close auth
 			deallocate auth
+			insert into booking select * from #entries
 		end
 	go
 
@@ -79,8 +79,6 @@ GO
 	AFTER INSERT AS
 		BEGIN
 			DECLARE @r_id INT, @capacity INT, @price INT, @h_b BIT, @h_s BIT, @b_id INT
-			-- CREATE TABLE #b_id (id INT)
-			-- INSERT into #b_id select booking_id FROM inserted
 			select booking_id, room_id into #b_id from inserted
 
 			while exists (select * from #b_id)
@@ -102,7 +100,6 @@ GO
 							OR (DATEADD(DAY, i.day_count, i.[start_date]) < b.[start_date])))))
 						BEGIN
 							DECLARE @description VARCHAR(200) = ''
-
 							IF (@price < @base_price)
 								SET @description = 'room is cheaper by ' + CONVERT(VARCHAR(5), (@base_price - @price))
 
@@ -130,8 +127,8 @@ GO
 										SET @description = @description + 'has bathtub'
 								END
 
-							if @description <> ''
-							PRINT '   Room ' + CONVERT(VARCHAR(3), @r_id) + ' is better choice, because: ' + @description + '.'
+							IF @description <> ''
+								PRINT '   Room ' + CONVERT(VARCHAR(3), @r_id) + ' is better choice, because: ' + @description + '.'
 
 						END
 					FETCH NEXT FROM pointer INTO @r_id, @capacity, @price, @h_b, @h_s
