@@ -25,11 +25,18 @@ GO
 	GO
 
 	CREATE PROCEDURE remove_employee (@id INT) AS
-		BEGIN
+	BEGIN
+		BEGIN TRY
+			IF not exists (select 1 from employee where employee_id = @id)
+				THROW 51000, 'Pracownik o podanym ID nie istnieje.', 1-- ('Pracownik o podanym ID nie istnieje.', 16, 1)
 			UPDATE employee SET leave_date = GETDATE() WHERE employee_id = @id
 			INSERT INTO exemployee SELECT * FROM employee WHERE employee_id = @id
 			DELETE FROM employee WHERE employee_id = @id
-		END
+		END TRY
+		BEGIN CATCH
+			PRINT error_message()
+		end CATCH
+	END
 	GO
 
 

@@ -16,6 +16,7 @@ GO
     EXEC remove_employee 14
     select * from exemployee
     go
+    EXEC remove_employee 2137
 
 -- Procedure #3: correct_booking_capacity - corrects bookings that were incorrectly registered (too many people) and prints out which one were incorrect
     EXEC correct_booking_capacity
