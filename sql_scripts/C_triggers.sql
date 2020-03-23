@@ -85,8 +85,6 @@ GO
 			begin
 				select top 1 @b_id = booking_id from #b_id
 
-				PRINT ' Booking ' + CONVERT(VARCHAR(5), @b_id)
-
 				DECLARE pointer CURSOR FOR SELECT room_id, capacity, price, has_bathtub, has_safe FROM room
 				OPEN pointer
 				FETCH NEXT FROM pointer INTO @r_id, @capacity, @price, @h_b, @h_s
@@ -128,7 +126,7 @@ GO
 								END
 
 							IF @description <> ''
-								PRINT '   Room ' + CONVERT(VARCHAR(3), @r_id) + ' is better choice, because: ' + @description + '.'
+								PRINT ' Booking ' + CONVERT(VARCHAR(5), @b_id) + ': Room ' + CONVERT(VARCHAR(3), @r_id) + ' is better choice, because: ' + @description + '.'
 
 						END
 					FETCH NEXT FROM pointer INTO @r_id, @capacity, @price, @h_b, @h_s
