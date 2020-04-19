@@ -38,7 +38,7 @@ go
         select @picture = (
             select picture from cookbook..picture where picture_id = @id
         )
-        begin try
+      --  begin try
             exec sp_oacreate 'adodb.stream', @object output;
             exec sp_oasetproperty @object, 'type', 1;
             exec sp_oamethod @object, 'open';
@@ -46,11 +46,11 @@ go
             exec sp_oamethod @object, 'savetofile', null, @path, 2;
             exec sp_oamethod @object, 'close';
             exec sp_oadestroy @object;
-        end try
-        begin catch
-			print 'en error occured'
-            exec sp_oadestroy @object;
-        end catch
+  --      end try
+   --     begin catch
+	--		print 'en error occured'
+    --        exec sp_oadestroy @object;
+   --     end catch
         set nocount off
     end
     go
@@ -80,10 +80,45 @@ go
     end
     go
 
--- procedure #4: scale_image
-	if exists (select 1 from sysobjects where name='scale_image')
-		drop procedure scale_image
-	go
+-- procedure #4: resize
+if exists (select 1 from sysobjects where name='resize')
+	drop procedure resize
+go
+
+create procedure resize (@id int, @width int, @height int) as
+begin
+	declare @ret varbinary(max)
+	declare @sql nvarchar(1000)
+	set @sql = N'SELECT picture FROM picture where picture_id = ' + str(@id)
+    set nocount on
+	begin try
+		exec sp_execute_external_script @language = N'Python'
+		, @script = N'
+from PIL import Image
+import io
+
+im = Image.open(io.BytesIO(InputDataSet.iloc[0].picture))
+im2 = im.resize(size=(width, height))
+with io.BytesIO() as f:
+	im2.save(f, format=im.format)
+	ret = f.getvalue()
+'
+		, @input_data_1 = @sql
+		, @params = N'@width int, @height int, @ret varbinary(max) output'
+		, @width = @width
+		, @height = @height
+		, @ret = @ret output
+
+		update picture
+		set picture = @ret
+		where picture_id = @id
+	end try
+	begin catch
+        print 'there was an error'
+    end catch
+    set nocount off
+end
+go
 
 -- procedure #5: change_format
 if exists (select 1 from sysobjects where name='change_format')
