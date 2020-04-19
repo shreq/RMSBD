@@ -1,19 +1,6 @@
 use cookbook
 go
 
--- db setup
-    exec sp_configure 'show advanced options', 1;
-    go
-    reconfigure;
-    go
-    exec sp_configure 'ole automation procedures', 1;
-    go
-    reconfigure;
-    go
-    exec sp_configure 'xp_cmdshell', 1;
-    go
-    reconfigure;
-    go
     --if exists (select 1 from sys.server_principals where name='user_')
     --    drop login [user_]
     --go

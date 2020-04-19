@@ -7,25 +7,37 @@ insert into cookbook..category (category_name) values
 select * from cookbook..category;
 go
 
-insert into cookbook..picture (picture)
-    select * from openrowset(bulk N'p:\zad2\images\burger.jpg', single_blob) as image;		-- 1
-insert into cookbook..picture (picture)
-    select * from openrowset(bulk N'p:\zad2\images\coffee.jpg', single_blob) as image;		-- 2
-insert into cookbook..picture (picture)
-    select * from openrowset(bulk N'p:\zad2\images\cornflakes.jpg', single_blob) as image;	-- 3
-insert into cookbook..picture (picture)
-    select * from openrowset(bulk N'p:\zad2\images\friedeggs.jpg', single_blob) as image;	-- 4
-insert into cookbook..picture (picture)
-    select * from openrowset(bulk N'p:\zad2\images\icecream.jpg', single_blob) as image;	-- 5
-insert into cookbook..picture (picture)
-    select * from openrowset(bulk N'p:\zad2\images\pancake.jpg', single_blob) as image;		-- 6
-insert into cookbook..picture (picture)
-    select * from openrowset(bulk N'p:\zad2\images\salmon.jpg', single_blob) as image;		-- 7
-insert into cookbook..picture (picture)
-    select * from openrowset(bulk N'p:\zad2\images\sandwich.jpg', single_blob) as image;	-- 8
-insert into cookbook..picture (picture)
-    select * from openrowset(bulk N'p:\zad2\images\steak.jpg', single_blob) as image;		-- 9
-select * from cookbook..picture;
+declare @path varchar(100)
+declare @img varchar(100)
+
+set @path = 'C:\Users\Tomek\Repos\studia\RMSBD\zad2\images\'
+
+set @img = @path + 'burger.jpg'
+exec cookbook..load_from_file @img;
+
+set @img = @path + 'coffee.jpg'
+exec cookbook..load_from_file @img;
+
+set @img = @path + 'cornflakes.jpg'
+exec cookbook..load_from_file @img;
+
+set @img = @path + 'friedeggs.jpg'
+exec cookbook..load_from_file @img;
+
+set @img = @path + 'icecream.jpg'
+exec cookbook..load_from_file @img;
+
+set @img = @path + 'pancake.jpg'
+exec cookbook..load_from_file @img;
+
+set @img = @path + 'salmon.jpg'
+exec cookbook..load_from_file @img;
+
+set @img = @path + 'sandwich.jpg'
+exec cookbook..load_from_file @img;
+
+set @img = @path + 'steak.jpg'
+exec cookbook..load_from_file @img;
 go
 
 insert into cookbook..recipe (content) values
