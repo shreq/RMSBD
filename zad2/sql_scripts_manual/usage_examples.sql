@@ -13,4 +13,7 @@
     exec cookbook..load_from_folder 'p:\zad2';
     go
 
---
+-- procedure #5: change_format
+	-- the procedure takes as a format JPEG or PNG
+	exec cookbook..change_format 1, 'PNG'
+	go

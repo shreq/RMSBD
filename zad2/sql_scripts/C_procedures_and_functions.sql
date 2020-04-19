@@ -48,6 +48,7 @@ go
             exec sp_oadestroy @object;
         end try
         begin catch
+			print 'en error occured'
             exec sp_oadestroy @object;
         end catch
         set nocount off
@@ -85,8 +86,41 @@ go
 	go
 
 -- procedure #5: change_format
-	if exists (select 1 from sysobjects where name='change_format')
-		drop procedure change_format
-	go
+if exists (select 1 from sysobjects where name='change_format')
+	drop procedure change_format
+go
+
+create procedure change_format (@id int, @format nvarchar(200)) as
+begin
+	declare @ret varbinary(max)
+	declare @sql nvarchar(1000)
+	set @sql = N'SELECT picture FROM picture where picture_id = ' + str(@id)
+    set nocount on
+	begin try
+		exec sp_execute_external_script @language = N'Python'
+		, @script = N'
+from PIL import Image
+import io
+
+im = Image.open(io.BytesIO(InputDataSet.iloc[0].picture))
+with io.BytesIO() as f:
+	im.save(f, format=file_format)
+	ret = f.getvalue()
+'
+		, @input_data_1 = @sql
+		, @params = N'@file_format nvarchar(100), @ret varbinary(max) output'
+		, @file_format = @format
+		, @ret = @ret output
+
+		update picture
+		set picture = @ret
+		where picture_id = @id
+	end try
+	begin catch
+        print 'there was an error'
+    end catch
+    set nocount off
+end
+go
 
 --
