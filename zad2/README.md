@@ -15,7 +15,7 @@ Notice, to load and save files you have to have all the required permissions on 
 ##Usage
 
 The project has the following folders:
-* _sql_scripts_ folder has all the files that set up the database - **files should be launched with alphabetical order**
+* _sql_scripts_ folder has all the files that set up the database - **files should be launched in alphabetical order**
 * _sql_scripts_manual_ folder has a file with usage examples
 * _images_ folder contains the pictures used in the files
 
