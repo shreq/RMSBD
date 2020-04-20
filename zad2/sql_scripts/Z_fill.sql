@@ -8,36 +8,10 @@ select * from cookbook..category;
 go
 
 declare @path varchar(100)
-declare @img varchar(100)
 
 set @path = 'P:\zad2\images\'
+exec cookbook..load_from_folder @path;
 
-set @img = @path + 'burger.jpg'
-exec cookbook..load_from_file @img;
-
-set @img = @path + 'coffee.jpg'
-exec cookbook..load_from_file @img;
-
-set @img = @path + 'cornflakes.jpg'
-exec cookbook..load_from_file @img;
-
-set @img = @path + 'friedeggs.jpg'
-exec cookbook..load_from_file @img;
-
-set @img = @path + 'icecream.jpg'
-exec cookbook..load_from_file @img;
-
-set @img = @path + 'pancake.jpg'
-exec cookbook..load_from_file @img;
-
-set @img = @path + 'salmon.jpg'
-exec cookbook..load_from_file @img;
-
-set @img = @path + 'sandwich.jpg'
-exec cookbook..load_from_file @img;
-
-set @img = @path + 'steak.jpg'
-exec cookbook..load_from_file @img;
 go
 select * from cookbook..picture;
 go
