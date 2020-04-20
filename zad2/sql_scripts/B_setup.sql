@@ -17,6 +17,3 @@ exec sp_configure 'external scripts enabled', 1;
 go
 reconfigure;
 go
-
-declare @IMG_PATH varchar
-set @IMG_PATH = 'P:\zad2\images\'
