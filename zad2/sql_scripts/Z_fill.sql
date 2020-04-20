@@ -10,7 +10,7 @@ go
 declare @path varchar(100)
 declare @img varchar(100)
 
-set @path = 'C:\Users\Tomek\Repos\studia\RMSBD\zad2\images\'
+set @path = 'P:\zad2\images\'
 
 set @img = @path + 'burger.jpg'
 exec cookbook..load_from_file @img;
@@ -39,17 +39,19 @@ exec cookbook..load_from_file @img;
 set @img = @path + 'steak.jpg'
 exec cookbook..load_from_file @img;
 go
+select * from cookbook..picture;
+go
 
 insert into cookbook..recipe (content) values
-	('take a bum and slam some cheese and ham'),	-- 1
-	('take a couple spoons of coffee and pour some water'),	-- 2
-	('first the corn flakes, then add milk'),	-- 3
-	('eggs go skrrt'),	-- 4
-	('frozen mousse'),	-- 5
-	('eggs with flour, pour some syroup'),	-- 6
-	('smoked salmon, put it on bread and sprinkle with lemon'),	-- 7
-	('bread with ham, eggs, pickle and tomato'),	-- 8
-	('meat from oven');	-- 9
+    ('take a bum and slam some cheese and ham'),	-- 1
+    ('take a couple spoons of coffee and pour some water'),	-- 2
+    ('first the corn flakes, then add milk'),	-- 3
+    ('eggs go skrrt'),	-- 4
+    ('frozen mousse'),	-- 5
+    ('eggs with flour, pour some syroup'),	-- 6
+    ('smoked salmon, put it on bread and sprinkle with lemon'),	-- 7
+    ('bread with ham, eggs, pickle and tomato'),	-- 8
+    ('meat from oven');	-- 9
 select * from cookbook..recipe;
 go
 

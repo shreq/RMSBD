@@ -22,8 +22,8 @@ create table cookbook..category (
 go
 
 create table cookbook..recipe (
-	recipe_id	int identity(1, 1),
-	content		varchar(500) not null
+    recipe_id	int identity(1, 1),
+    content		varchar(500) not null
 );
 go
 
@@ -32,6 +32,6 @@ create table cookbook..dish (
     dish_name   varchar(50) not null,
     category_id int not null,
     picture_id  int not null,
-	recipe_id	int not null
+    recipe_id	int not null
 );
 go
