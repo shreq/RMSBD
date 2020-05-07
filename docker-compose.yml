@@ -16,8 +16,8 @@ services:
         networks:
             - rmsbd
         volumes:
-            - ./zad2/sql_scripts:/sql_scripts
-            - ./zad2/images:/images
+            - ./zad3/sql_scripts:/sql_scripts
+            - ./zad3/xmls:/xmls
         command:
             - /bin/bash
             - -c

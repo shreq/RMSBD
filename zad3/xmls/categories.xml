@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<categories>
+    <category>
+        <category_name>breakfast</category_name>
+    </category>
+    <category>
+        <category_name>lunch</category_name>
+    </category>
+    <category>
+        <category_name>dinner</category_name>
+    </category>
+    <category>
+        <category_name>drink</category_name>
+    </category>
+    <category>
+        <category_name>dessert</category_name>
+    </category>
+</categories>

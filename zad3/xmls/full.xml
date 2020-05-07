@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<cookbook>
+    <recipes>
+        <recipe rid="1">take a bum and slam some cheese and ham</recipe>
+        <recipe rid="2">take a couple spoons of coffee and pour some water</recipe>
+        <recipe rid="3">first the corn flakes, then add milk</recipe>
+        <recipe rid="4">eggs go skrrt</recipe>
+        <recipe rid="5">frozen mousse</recipe>
+        <recipe rid="6">eggs with flour, pour some syroup</recipe>
+        <recipe rid="7">smoked salmon, put it on bread and sprinkle with lemon</recipe>
+        <recipe rid="8">bread with ham, eggs, pickle and tomato</recipe>
+        <recipe rid="9">meat from oven</recipe>
+    </recipes>
+    <categories>
+        <category cid="1">breakfast</category>
+        <category cid="2">lunch</category>
+        <category cid="3">dinner</category>
+        <category cid="4">drink</category>
+        <category cid="5">dessert</category>
+    </categories>
+    <dishes>
+        <dish did="1" rid="1" cid="2">
+            <name>burger</name>
+        </dish>
+        <dish did="2" rid="2" cid="4">
+            <name>coffee</name>
+        </dish>
+        <dish did="3" rid="3" cid="1">
+            <name>corn flakes</name>
+        </dish>
+        <dish did="4" rid="4" cid="1">
+            <name>fried eggs</name>
+        </dish>
+        <dish did="5" rid="5" cid="5">
+            <name>ice cream</name>
+        </dish>
+        <dish did="6" rid="6" cid="5">
+            <name>pancakes</name>
+        </dish>
+        <dish did="7" rid="7" cid="3">
+            <name>salmon</name>
+        </dish>
+        <dish did="8" rid="8" cid="3">
+            <name>sandwich</name>
+        </dish>
+        <dish did="9" rid="9" cid="2">
+            <name>steak</name>
+        </dish>
+    </dishes>
+</cookbook>
