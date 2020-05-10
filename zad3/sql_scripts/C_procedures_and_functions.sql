@@ -31,3 +31,70 @@ begin
     set nocount off
 end
 go
+
+if exists (select 1 from sysobjects where name='view_dishes')
+    drop procedure view_dishes
+go
+
+create procedure view_dishes (@file_id int) as
+begin
+	declare @xml as xml
+	declare @doc as int
+
+	select @xml = document from files where id = @file_id
+
+	exec sp_xml_preparedocument @doc output, @xml
+
+	select * from openxml(@doc, 'cookbook/dishes/dish', 2) 
+	with (dish_id varchar(10) '@did',
+		  recipie_id varchar(10) '@rid',
+		  category_id varchar(10) '@cid',
+		  name text 'name')
+
+	exec sp_xml_removedocument @doc
+end
+go
+
+
+if exists (select 1 from sysobjects where name='view_recipes')
+    drop procedure view_recipes
+go
+
+create procedure view_recipes (@file_id int) as
+begin
+	declare @xml as xml
+	declare @doc as int
+
+	select @xml = document from files where id = @file_id
+
+	exec sp_xml_preparedocument @doc output, @xml
+
+	select * from openxml(@doc, 'cookbook/recipes/recipe', 2) 
+	with (recipe_id varchar(10) '@rid',
+		  content text '.')
+
+	exec sp_xml_removedocument @doc
+end
+go
+
+
+if exists (select 1 from sysobjects where name='view_categories')
+    drop procedure view_categories
+go
+
+create procedure view_categories (@file_id int) as
+begin
+	declare @xml as xml
+	declare @doc as int
+
+	select @xml = document from files where id = @file_id
+
+	exec sp_xml_preparedocument @doc output, @xml
+
+	select * from openxml(@doc, 'cookbook/categories/category', 2) 
+	with (category_id varchar(10) '@cid',
+		  name text '.')
+
+	exec sp_xml_removedocument @doc
+end
+go
