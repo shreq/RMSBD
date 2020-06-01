@@ -52,10 +52,24 @@ go
 create procedure add_restricted_area (@park_id int, @restricted_polygon geography, @description varchar(100)) as
 begin
     set nocount on
-    insert into geo..locations values (@park_id, @restricted_area, @description, 'RESTRICTED')
+    insert into geo..locations values (@park_id, @restricted_polygon, @description, 'RESTRICTED')
     set nocount off
 end
 go
+
+-- function #5: create_polygon
+if exists (select 1 from sysobjects where name='create_polygon')
+    drop function create_polygon
+go
+
+create function create_polygon (@polygon varchar(max))
+returns geography
+as
+begin
+    return geography::STPolyFromText('POLYGON((-122.358 47.653, -122.348 47.649, -122.348 47.658, -122.358 47.658, -122.358 47.653))', 4326);
+end
+go
+
 
 -- procedure #6: print_distance
 if exists (select 1 from sysobjects where name='print_distance')
