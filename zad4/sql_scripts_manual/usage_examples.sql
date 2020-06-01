@@ -11,3 +11,8 @@ exec geo..add_point_of_interest 1, 44.60, -110.50, 44.65, -110.45, 'shortest pat
 exec geo..add_point_of_interest 1, 44.60, -110.50, 'toilet'
 
 select * from geo..locations
+
+exec geo..print_readable;
+
+-- procedure #6: print_distance
+exec geo..print_distance 1, 2;

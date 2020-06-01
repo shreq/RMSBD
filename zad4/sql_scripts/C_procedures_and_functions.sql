@@ -26,7 +26,7 @@ go
 create procedure add_point_of_interest (@park_id int, @x_cord float, @y_cord float, @description varchar(100)) as
 begin
     set nocount on
-    insert into geo..locations values (@park_id, geography::Point(@x_cord, @y_cord, 4326), @description, 'POI') 
+    insert into geo..locations values (@park_id, geography::Point(@x_cord, @y_cord, 4326), @description, 'POI')
     set nocount off
 end
 go
@@ -54,5 +54,24 @@ begin
     set nocount on
     insert into geo..locations values (@park_id, @restricted_area, @description, 'RESTRICTED')
     set nocount off
+end
+go
+
+-- procedure #6: print_distance
+if exists (select 1 from sysobjects where name='print_distance')
+	drop procedure print_distance
+go
+
+create procedure print_distance (@idA int, @idB int) as
+begin
+	set nocount on
+	declare @distance float = round((
+		select coords from geo..parks where geo..parks.id = @idA
+	).STDistance((
+		select coords from geo..parks where geo..parks.id = @idB
+	)), 2)
+	set nocount off
+
+	print cast(@distance as decimal(10, 2))
 end
 go
