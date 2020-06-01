@@ -62,14 +62,13 @@ if exists (select 1 from sysobjects where name='create_polygon')
     drop function create_polygon
 go
 
-create function create_polygon (@polygon varchar(max))
+create function create_polygon (@polygon nvarchar(max))
 returns geography
 as
 begin
-    return geography::STPolyFromText('POLYGON((-122.358 47.653, -122.348 47.649, -122.348 47.658, -122.358 47.658, -122.358 47.653))', 4326);
+    return geography::STPolyFromText('POLYGON((' + @polygon + '))', 4326);
 end
 go
-
 
 -- procedure #6: print_distance
 if exists (select 1 from sysobjects where name='print_distance')
